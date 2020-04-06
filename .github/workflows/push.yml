@@ -1,0 +1,29 @@
+name: Push
+
+on:
+  push:
+    branches: [master]
+
+env:
+  REPOSITORY_OWNER: guillaume.bonnet@epitech.eu
+  REPOSITORY_NAME: NWP_myftp_2019
+
+jobs:
+
+  push:
+    runs-on: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Initialize
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: git.epitech.eu
+          private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Push
+        run: |
+          git push git@git.epitech.eu:/$REPOSITORY_OWNER/$REPOSITORY_NAME --force
