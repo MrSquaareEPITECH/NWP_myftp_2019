@@ -12,7 +12,7 @@
 #include "type/command.h"
 
 static const command_t COMMANDS[] = {
-    {"QUIT\r\n", quit},
+    {"QUIT", quit},
     {NULL, NULL}
 };
 

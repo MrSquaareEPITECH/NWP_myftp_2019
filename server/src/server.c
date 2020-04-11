@@ -63,6 +63,8 @@ static int server_execute(server_t* this, client_t* client)
         return (CODE_ERROR);
     }
 
+    string_crlf(message);
+
     char** args = string_split(message, " ");
 
     for (size_t i = 0; COMMANDS[i].name; ++i) {
