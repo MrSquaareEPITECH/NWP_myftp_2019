@@ -10,7 +10,7 @@ TEST_NAME			=		tests/unit_tests
 TEST_SH_NAME		=		tests/tests.sh
 
 COV_DIR				=		obj
-INCL_DIR			=		include
+INCL_DIR			=		src
 OBJ_DIR				=		obj
 SRC_DIR				=		src
 TEST_DIR			=		tests
@@ -21,7 +21,12 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.c
 
-PROJ_SRC			=
+PROJ_SRC			=		client.c							\
+							client_list.c						\
+							server.c							\
+							socket.c							\
+							command/quit.c						\
+							util/string.c						\
 
 TEST_SRC			=
 

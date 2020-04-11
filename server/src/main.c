@@ -1,11 +1,20 @@
 /*
 ** EPITECH PROJECT, 2020
-** NWP_myftp_2019
+** server
 ** File description:
 ** main.c
 */
 
+#include "server.h"
+
 int main()
 {
+    server_t* server = server_create(".", 20000);
+
+    server->listen(server);
+    server->run(server);
+
+    server_delete(server);
+
     return (0);
 }
