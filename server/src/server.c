@@ -27,7 +27,7 @@ static int server_accept(server_t* this)
 
     client_t* client = client_create();
 
-    if (client->control->accept(client->control, this->control)) {
+    if (client->con_control->accept(client->con_control, this->control)) {
         fprintf(stderr, "%s: ", ERROR_SERVER_ACCEPT);
 
         return (CODE_ERROR);
@@ -45,14 +45,14 @@ static int server_accept(server_t* this)
         return (CODE_ERROR);
     }
 
-    FD_SET(client->control->fd, &this->active_fd_set);
+    FD_SET(client->con_control->fd, &this->active_fd_set);
 
     return (CODE_SUCCESS);
 }
 
 static int server_execute(server_t* this, client_t* client)
 {
-    if (FD_ISSET(client->control->fd, &this->read_fd_set) == 0)
+    if (FD_ISSET(client->con_control->fd, &this->read_fd_set) == 0)
         return (CODE_SUCCESS);
 
     char message[SIZE_MESSAGE];
@@ -150,8 +150,11 @@ void server_delete(server_t* server)
     if (server == NULL)
         return;
 
-    client_list_delete(server->clients);
-    socket_delete(server->control);
+    if (server->control)
+        socket_delete(server->control);
+
+    if (server->clients)
+        client_list_delete(server->clients);
 
     free(server);
 }

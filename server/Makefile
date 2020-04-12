@@ -25,7 +25,11 @@ PROJ_SRC			=		client.c							\
 							client_list.c						\
 							server.c							\
 							socket.c							\
+							command/pasv.c						\
+							command/port.c						\
 							command/quit.c						\
+							command/retr.c						\
+							command/stor.c						\
 							util/string.c						\
 
 TEST_SRC			=

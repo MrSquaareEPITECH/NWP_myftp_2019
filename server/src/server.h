@@ -19,6 +19,7 @@ typedef struct server_s server_t;
 struct server_s {
     client_list_t *clients;
     socket_t *control;
+    socket_t *data;
     const char *directory;
 
     fd_set active_fd_set;

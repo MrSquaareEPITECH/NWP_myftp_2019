@@ -9,8 +9,8 @@
 #define SERVER_SRC_DEFINITION_ERROR_H
 
 static const char* const ERROR_CLIENT_DOWNLOAD = "Can't download";
-static const char* const ERROR_CLIENT_RECEIVE = "Can't download";
-static const char* const ERROR_CLIENT_SEND = "Can't download";
+static const char* const ERROR_CLIENT_RECEIVE = "Can't receive";
+static const char* const ERROR_CLIENT_SEND = "Can't send";
 static const char* const ERROR_CLIENT_UPLOAD = "Can't upload";
 
 static const char* const ERROR_SERVER_ACCEPT = "Can't accept";

@@ -7,28 +7,46 @@
 
 #include "client.h"
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "def/code.h"
 #include "def/error.h"
+#include "def/size.h"
 
-static int client_download(client_t *client, char *buf, size_t count)
+static int client_download(client_t *client, int dest)
 {
-    if (read(client->data->fd, buf, count) == CODE_INVALID) {
-        fprintf(stderr, "%s: ", ERROR_CLIENT_DOWNLOAD);
+    char buf[SIZE_MESSAGE];
+    int nbytes = 0;
 
-        return (CODE_ERROR);
-    }
+    do {
+        memset(buf, 0, SIZE_MESSAGE);
+
+        nbytes = read(client->con_data->fd, buf, SIZE_MESSAGE);
+
+        if (nbytes == CODE_INVALID) {
+            fprintf(stderr, "%s: %s", ERROR_CLIENT_DOWNLOAD, strerror(errno));
+
+            return (CODE_ERROR);
+        }
+
+        if (write(dest, buf, nbytes) == CODE_INVALID) {
+            fprintf(stderr, "%s: %s", ERROR_CLIENT_DOWNLOAD, strerror(errno));
+
+            return (CODE_ERROR);
+        }
+    } while (nbytes > 0);
 
     return (CODE_SUCCESS);
 }
 
 static int client_receive(client_t *client, char *buf, size_t count)
 {
-    if (read(client->control->fd, buf, count) == CODE_INVALID) {
-        fprintf(stderr, "%s: ", ERROR_CLIENT_RECEIVE);
+    if (read(client->con_control->fd, buf, count) == CODE_INVALID) {
+        fprintf(stderr, "%s: %s", ERROR_CLIENT_RECEIVE, strerror(errno));
 
         return (CODE_ERROR);
     }
@@ -38,8 +56,8 @@ static int client_receive(client_t *client, char *buf, size_t count)
 
 static int client_send(client_t *client, const char *buf, size_t count)
 {
-    if (write(client->control->fd, buf, count) == CODE_INVALID) {
-        fprintf(stderr, "%s: ", ERROR_CLIENT_SEND);
+    if (write(client->con_control->fd, buf, count) == CODE_INVALID) {
+        fprintf(stderr, "%s: %s", ERROR_CLIENT_SEND, strerror(errno));
 
         return (CODE_ERROR);
     }
@@ -47,13 +65,28 @@ static int client_send(client_t *client, const char *buf, size_t count)
     return (CODE_SUCCESS);
 }
 
-static int client_upload(client_t *client, const char *buf, size_t count)
+static int client_upload(client_t *client, int src)
 {
-    if (write(client->data->fd, buf, count) == CODE_INVALID) {
-        fprintf(stderr, "%s: ", ERROR_CLIENT_UPLOAD);
+    char buf[SIZE_MESSAGE];
+    int nbytes = 0;
 
-        return (CODE_ERROR);
-    }
+    do {
+        memset(buf, 0, SIZE_MESSAGE);
+
+        nbytes = read(src, buf, SIZE_MESSAGE);
+
+        if (nbytes == CODE_INVALID) {
+            fprintf(stderr, "%s: %s", ERROR_CLIENT_UPLOAD, strerror(errno));
+
+            return (CODE_ERROR);
+        }
+
+        if (write(client->con_data->fd, buf, nbytes) == CODE_INVALID) {
+            fprintf(stderr, "%s: %s", ERROR_CLIENT_UPLOAD, strerror(errno));
+
+            return (CODE_ERROR);
+        }
+    } while (nbytes > 0);
 
     return (CODE_SUCCESS);
 }
@@ -65,8 +98,8 @@ client_t *client_create()
     if (client == NULL)
         return (NULL);
 
-    client->control = socket_create(INADDR_ANY, PF_INET);
-    client->data = NULL;
+    client->con_control = socket_create(INADDR_ANY, PF_INET);
+    client->con_data = NULL;
 
     client->download = client_download;
     client->receive = client_receive;
@@ -81,8 +114,11 @@ void client_delete(client_t *client)
     if (client == NULL)
         return;
 
-    if (client->control)
-        socket_delete(client->control);
+    if (client->con_control)
+        socket_delete(client->con_control);
+
+    if (client->con_data)
+        socket_delete(client->con_data);
 
     if (client->data)
         socket_delete(client->data);
