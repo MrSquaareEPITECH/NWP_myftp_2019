@@ -12,10 +12,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *string_crlf(char *str)
+char *string_brk(char *str)
 {
     char *find = strstr(str, "\r\n");
 
+    if (!find)
+        find = strstr(str, "\n");
     if (find)
         *find = '\0';
 

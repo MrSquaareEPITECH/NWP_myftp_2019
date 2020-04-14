@@ -8,7 +8,7 @@
 #ifndef SERVER_SRC_UTIL_STRING_H
 #define SERVER_SRC_UTIL_STRING_H
 
-char *string_crlf(char *str);
+char *string_brk(char *str);
 int string_count(const char *str, char c);
 char *string_format(const char *format, ...);
 

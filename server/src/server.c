@@ -47,17 +47,13 @@ static int server_client_read(server_t* this, client_t* client)
     if (client->receive(client, message, SIZE_MESSAGE))
         return (CODE_ERROR);
 
-    string_crlf(message);
+    string_brk(message);
 
     char** argv = args_create(message, " ");
     int argc = args_count(argv);
 
-    if (argc < 1) {
-        client->messages->add(
-            client->messages, string_format(MESSAGE_ERROR_UNKNOWN));
-
+    if (argc < 1)
         return (CODE_ERROR); // TODO: Better error
-    }
 
     const command_t* command = command_find(argv[0]);
 
