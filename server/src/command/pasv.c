@@ -8,24 +8,41 @@
 #include "pasv.h"
 
 #include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "def/code.h"
 #include "def/message.h"
+#include "util/string.h"
+
+static int pasv_validation(client_t *client, int argc, char **argv)
+{
+    (void)(argc);
+    (void)(argv);
+
+    if (client->state != STATE_LOGGED) {
+        client->messages->add(
+            client->messages, string_format(MESSAGE_ERROR_LOGIN_MANDATORY));
+
+        return (CODE_ERROR);
+    }
+
+    return (CODE_SUCCESS);
+}
 
 static char *pasv_information(client_t *client)
 {
+    uint32_t size = sizeof(client->data->addr_in);
+
+    getsockname(
+        client->data->fd, (sockaddr_t *)(&client->data->addr_in), &size);
+
     char *address = inet_ntoa(client->data->addr_in.sin_addr);
-    int port = 30000;
+    int port = ntohs(client->data->addr_in.sin_port);
 
-    int len = snprintf(NULL, 0, "%s,%d,%d", address, port / 256, port % 256);
-    char *information = malloc(sizeof(char) * (len + 1));
+    char *information =
+        string_format("%s,%d,%d", address, port / 256, port % 256);
 
-    sprintf(information, "%s,%d,%d", address, port / 256, port % 256);
-
-    for (int i = 0; i < len; ++i)
+    for (size_t i = 0, len = strlen(information); i < len; ++i)
         if (information[i] == '.')
             information[i] = ',';
 
@@ -35,24 +52,20 @@ static char *pasv_information(client_t *client)
 static char *pasv_message(client_t *client)
 {
     char *information = pasv_information(client);
-    size_t len = strlen(MESSAGE_PASV) + strlen(information);
-    char *message = malloc(sizeof(char) * (len + 1));
-
-    sprintf(message, MESSAGE_PASV, information);
-
-    free(information);
+    char *message = string_format(MESSAGE_PASV, information);
 
     return (message);
 }
 
-int pasv(server_t *server, client_t *client, char **args)
+int pasv(server_t *server, client_t *client, int argc, char **argv)
 {
-    (void)args;
+    (void)(server);
 
-    if (!FD_ISSET(client->con_control->fd, &server->write_fd_set))
-        return (CODE_SUCCESS);
+    if (pasv_validation(client, argc, argv))
+        return (CODE_ERROR);
 
-    client->data = socket_create_p(INADDR_ANY, PF_INET, 30000);
+    client->data = socket_create(INADDR_ANY, PF_INET);
+    client->mode = TRANSFER_PASSIVE;
 
     if (client->data->bind(client->data, SOCK_STREAM))
         return (CODE_ERROR);
@@ -60,14 +73,7 @@ int pasv(server_t *server, client_t *client, char **args)
     if (client->data->listen(client->data, 1))
         return (CODE_ERROR);
 
-    client->mode = TRANSFER_PASSIVE;
-
-    char *message = pasv_message(client);
-
-    if (client->send(client, message, strlen(message)))
-        return (CODE_ERROR);
-
-    free(message);
+    client->messages->add(client->messages, pasv_message(client));
 
     return (CODE_SUCCESS);
 }

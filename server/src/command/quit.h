@@ -11,6 +11,8 @@
 #include "client.h"
 #include "server.h"
 
-int quit(server_t *server, client_t *client, char **args);
+static const char *const HELP_QUIT = "Disconnect";
+
+int quit(server_t *server, client_t *client, int argc, char **argv);
 
 #endif // SERVER_SRC_COMMAND_QUIT_H

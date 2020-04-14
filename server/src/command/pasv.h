@@ -11,6 +11,8 @@
 #include "client.h"
 #include "server.h"
 
-int pasv(server_t *server, client_t *client, char **args);
+static const char *const HELP_PASV = "Use passive mode";
+
+int pasv(server_t *server, client_t *client, int argc, char **argv);
 
 #endif // SERVER_SRC_COMMAND_PASV_H

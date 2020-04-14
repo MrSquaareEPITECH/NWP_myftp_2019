@@ -15,17 +15,38 @@
 
 #include "def/code.h"
 #include "def/message.h"
+#include "util/string.h"
 
-int retr(server_t *server, client_t *client, char **args)
+static int retr_validation(client_t *client, int argc, char **argv)
 {
-    (void) args;
+    (void)(argv);
 
-    if (!FD_ISSET(client->con_control->fd, &server->write_fd_set))
-        return (CODE_SUCCESS);
+    if (client->state != STATE_LOGGED) {
+        client->messages->add(
+            client->messages, string_format(MESSAGE_ERROR_LOGIN_MANDATORY));
 
-    if (client->send(client, MESSAGE_RETR_OPEN, strlen(MESSAGE_RETR_OPEN)))
         return (CODE_ERROR);
+    }
 
+    if (client->mode == TRANSFER_UNKNOWN) {
+        client->messages->add(
+            client->messages, string_format(MESSAGE_UNKNOWN_MODE));
+
+        return (CODE_ERROR);
+    }
+
+    if (argc < 2) {
+        client->messages->add(
+            client->messages, string_format(MESSAGE_ERROR_ARGUMENTS));
+
+        return (CODE_ERROR);
+    }
+
+    return (CODE_SUCCESS);
+}
+
+static int retr_connect(client_t *client)
+{
     if (client->mode == TRANSFER_ACTIVE) {
         if (client->con_data->connect(client->con_data, SOCK_STREAM))
             return (CODE_ERROR);
@@ -36,7 +57,12 @@ int retr(server_t *server, client_t *client, char **args)
             return (CODE_ERROR);
     }
 
-    int file = open(args[1], O_RDONLY);
+    return (CODE_SUCCESS);
+}
+
+static int retr_upload(client_t *client, const char *path)
+{
+    int file = open(path, O_RDONLY);
 
     if (file == CODE_INVALID) {
         fprintf(stderr, "Can't open: %s\n", strerror(errno));
@@ -48,6 +74,12 @@ int retr(server_t *server, client_t *client, char **args)
         return (CODE_ERROR);
 
     close(file);
+
+    return (CODE_SUCCESS);
+}
+
+static int retr_disconnect(client_t *client)
+{
     socket_delete(client->con_data);
 
     if (client->mode == TRANSFER_PASSIVE)
@@ -57,8 +89,42 @@ int retr(server_t *server, client_t *client, char **args)
     client->data = NULL;
     client->mode = TRANSFER_UNKNOWN;
 
-    if (client->send(client, MESSAGE_RETR_CLOSE, strlen(MESSAGE_RETR_CLOSE)))
+    return (CODE_SUCCESS);
+}
+
+static int retr_fork(client_t *client, const char *path)
+{
+    int pid = fork();
+
+    if (pid == 0) {
+        if (retr_connect(client))
+            return (CODE_ERROR);
+
+        if (retr_upload(client, path))
+            return (CODE_ERROR);
+
+        if (retr_disconnect(client))
+            return (CODE_ERROR);
+    }
+
+    return (CODE_SUCCESS);
+}
+
+int retr(server_t *server, client_t *client, int argc, char **argv)
+{
+    (void)(server);
+
+    if (retr_validation(client, argc, argv))
         return (CODE_ERROR);
+
+    client->messages->add(
+        client->messages, string_format(MESSAGE_CONNECTION_OPEN));
+
+    if (retr_fork(client, argv[1]))
+        return (CODE_ERROR);
+
+    client->messages->add(
+        client->messages, string_format(MESSAGE_CONNECTION_CLOSE));
 
     return (CODE_SUCCESS);
 }

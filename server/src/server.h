@@ -26,13 +26,16 @@ struct server_s {
     fd_set read_fd_set;
     fd_set write_fd_set;
 
-    int (*accept)(server_t* this);
-    int (*execute)(server_t *this, client_t *client);
-    int (*listen)(server_t* this);
+    int (*accept)(server_t *this);
+    int (*client_add)(server_t *this, client_t *client);
+    int (*client_remove)(server_t *this, client_t *client);
+    int (*execute)(server_t *this);
+    int (*listen)(server_t *this);
+    int (*select)(server_t *this);
     int (*run)(server_t *this);
 };
 
-server_t* server_create(const char *directory, uint16_t port);
-void server_delete(server_t* server);
+server_t *server_create(const char *directory, uint16_t port);
+void server_delete(server_t *server);
 
 #endif // SERVER_SRC_SERVER_H

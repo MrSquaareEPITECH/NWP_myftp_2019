@@ -100,6 +100,12 @@ client_t *client_create()
 
     client->con_control = socket_create(INADDR_ANY, PF_INET);
     client->con_data = NULL;
+    client->data = NULL;
+    client->directory = NULL;
+    client->user = NULL;
+    client->messages = message_list_create();
+    client->mode = TRANSFER_UNKNOWN;
+    client->state = STATE_UNKNOWN;
 
     client->download = client_download;
     client->receive = client_receive;
@@ -114,14 +120,14 @@ void client_delete(client_t *client)
     if (client == NULL)
         return;
 
-    if (client->con_control)
-        socket_delete(client->con_control);
+    socket_delete(client->con_control);
+    socket_delete(client->con_data);
+    socket_delete(client->data);
 
-    if (client->con_data)
-        socket_delete(client->con_data);
+    message_list_delete(client->messages);
 
-    if (client->data)
-        socket_delete(client->data);
+    free(client->directory);
+    free(client->user);
 
     free(client);
 }

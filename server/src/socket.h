@@ -27,6 +27,6 @@ struct socket_s {
 
 socket_t *socket_create(uint32_t addr, uint32_t family);
 socket_t *socket_create_p(uint32_t addr, uint32_t family, uint16_t port);
-void socket_delete(socket_t* socket);
+void socket_delete(socket_t *socket);
 
 #endif // SERVER_SRC_SOCKET_H

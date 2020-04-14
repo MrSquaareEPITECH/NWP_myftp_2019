@@ -5,8 +5,8 @@
 ** error.h
 */
 
-#ifndef SERVER_SRC_DEFINITION_ERROR_H
-#define SERVER_SRC_DEFINITION_ERROR_H
+#ifndef SERVER_SRC_DEF_ERROR_H
+#define SERVER_SRC_DEF_ERROR_H
 
 static const char* const ERROR_CLIENT_DOWNLOAD = "Can't download";
 static const char* const ERROR_CLIENT_RECEIVE = "Can't receive";
@@ -24,4 +24,4 @@ static const char* const ERROR_SOCKET_CONNECT = "Can't connect socket";
 static const char* const ERROR_SOCKET_CREATE = "Can't create socket";
 static const char* const ERROR_SOCKET_LISTEN = "Can't listen socket";
 
-#endif // SERVER_SRC_DEFINITION_ERROR_H
+#endif // SERVER_SRC_DEF_ERROR_H

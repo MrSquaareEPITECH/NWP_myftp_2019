@@ -5,11 +5,11 @@
 ** def.h
 */
 
-#ifndef SERVER_SRC_UTIL_DEF_H
-#define SERVER_SRC_UTIL_DEF_H
+#ifndef SERVER_SRC_DEF_CODE_H
+#define SERVER_SRC_DEF_CODE_H
 
 #define CODE_INVALID (-1)
 #define CODE_SUCCESS (0)
 #define CODE_ERROR (84)
 
-#endif // SERVER_SRC_UTIL_DEF_H
+#endif // SERVER_SRC_DEF_CODE_H

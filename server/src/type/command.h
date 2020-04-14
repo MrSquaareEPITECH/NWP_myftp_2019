@@ -15,7 +15,8 @@ typedef struct command_s command_t;
 
 struct command_s {
     const char *name;
-    int (*func)(server_t *server, client_t *client, char **args);
+    const char *help;
+    int (*func)(server_t *server, client_t *client, int argc, char **argv);
 };
 
 #endif // SERVER_SRC_TYPE_COMMAND_H

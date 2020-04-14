@@ -23,13 +23,24 @@ MAIN_SRC			=		main.c
 
 PROJ_SRC			=		client.c							\
 							client_list.c						\
+							message_list.c						\
 							server.c							\
 							socket.c							\
+							command/cdup.c						\
+							command/cwd.c						\
+							command/dele.c						\
+							command/help.c						\
+							command/list.c						\
+							command/pass.c						\
 							command/pasv.c						\
 							command/port.c						\
+							command/pwd.c						\
 							command/quit.c						\
 							command/retr.c						\
 							command/stor.c						\
+							command/user.c						\
+							helper/command.c					\
+							util/args.c							\
 							util/string.c						\
 
 TEST_SRC			=

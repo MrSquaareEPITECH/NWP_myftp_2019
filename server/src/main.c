@@ -5,6 +5,8 @@
 ** main.c
 */
 
+#include <util/string.h>
+
 #include "server.h"
 
 int main()

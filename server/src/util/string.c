@@ -7,10 +7,12 @@
 
 #include "string.h"
 
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-char *string_crlf(const char *str)
+char *string_crlf(char *str)
 {
     char *find = strstr(str, "\r\n");
 
@@ -20,37 +22,32 @@ char *string_crlf(const char *str)
     return (find);
 }
 
-char **string_split(const char *str, const char *delim)
+int string_count(const char *str, char c)
 {
-    char *dup = strdup(str);
-    size_t size = 0;
+    int count = 0;
 
-    for (const char *token = strtok(dup, delim); token;
-         ++size, token = strtok(NULL, delim))
+    for (size_t i = 0, len = strlen(str); i < len; ++i, count += (str[i] == c))
         ;
 
-    free(dup);
+    return (count);
+}
 
-    char **array = malloc(sizeof(char *) * (size + 1));
+char *string_format(const char *format, ...)
+{
+    va_list variadic;
 
-    if (array == NULL)
-        return NULL;
+    va_start(variadic, format);
 
-    dup = strdup(str);
+    int len = vsnprintf(NULL, 0, format, variadic);
+    char *message = malloc(sizeof(char) * (len + 1));
 
-    if (dup == NULL)
-        return NULL;
+    va_end(variadic);
+    va_start(variadic, format);
 
-    size_t i = 0;
+    memset(message, 0, sizeof(char) * (len + 1));
+    vsprintf(message, format, variadic);
 
-    for (const char *token = strtok(dup, delim); i < size;
-         ++i, token = strtok(NULL, delim)) {
-        array[i] = strdup(token);
-    }
+    va_end(variadic);
 
-    array[size] = NULL;
-
-    free(dup);
-
-    return array;
+    return message;
 }
