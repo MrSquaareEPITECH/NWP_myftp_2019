@@ -14,10 +14,8 @@ const command_t *command_find(const char *name)
     for (size_t i = 0; COMMANDS[i].name; ++i) {
         if (strcasecmp(COMMANDS[i].name, name) == 0) {
             command = &COMMANDS[i];
-
             break;
         }
     }
-
     return (command);
 }

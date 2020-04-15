@@ -22,7 +22,6 @@ static int cdup_validation(client_t *client, int argc, char **argv)
 
         return (CODE_ERROR);
     }
-
     return (CODE_SUCCESS);
 }
 
@@ -37,8 +36,6 @@ int cdup(server_t *server, client_t *client, int argc, char **argv)
 
     if (parent != client->directory)
         *parent = '\0';
-
     client->messages->add(client->messages, string_format(MESSAGE_SUCCESS));
-
     return (CODE_SUCCESS);
 }

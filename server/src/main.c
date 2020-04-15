@@ -19,26 +19,20 @@ int error(int argc, char **argv)
     if (argc != 3) {
         fprintf(stderr, "Error: Missing arguments. Format: %s port path\n",
             argv[0]);
-
         return (CODE_ERROR);
     }
 
     char *endptr;
 
     strtol(argv[1], &endptr, 10);
-
     if (*endptr != '\0') {
         fprintf(stderr, "Error: Invalid port\n");
-
         return (CODE_ERROR);
     }
-
     if (dir_exists(argv[2]) == false) {
         fprintf(stderr, "Error: Invalid path: %s\n", strerror(errno));
-
         return (CODE_ERROR);
     }
-
     return (CODE_SUCCESS);
 }
 
