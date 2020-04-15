@@ -71,16 +71,22 @@ static int server_client_write(server_t* this, client_t* client)
 {
     (void)(this);
 
-    for (message_chain_t* item = client->messages->begin; item;
-         item = item->next) {
+    for (message_chain_t* item = client->messages->begin; item;) {
         if (FD_ISSET(client->con_control->fd, &this->write_fd_set) == 0)
             return (CODE_SUCCESS);
 
         if (client->send(client, item->message, strlen(item->message)))
             return (CODE_ERROR);
 
-        if (client->messages->remove(client->messages, item->message))
+        message_chain_t *current = item;
+
+        item = item->next;
+
+        if (client->messages->remove(client->messages, current->message))
             return (CODE_ERROR);
+
+        free(current->message);
+        free(current);
     }
 
     return (CODE_SUCCESS);
@@ -181,8 +187,11 @@ static int server_run(server_t* this)
         if (this->accept(this))
             return (CODE_ERROR);
 
-        if (this->execute(this))
+        if (this->execute(this)) {
+            fprintf(stderr, "Can't execute\n");
+
             return (CODE_ERROR);
+        }
     }
 }
 

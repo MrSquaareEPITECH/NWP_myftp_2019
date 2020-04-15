@@ -10,17 +10,18 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "def/code.h"
 #include "def/message.h"
+#include "util/file.h"
 #include "util/string.h"
 
-static int retr_validation(client_t *client, int argc, char **argv)
+static int retr_validation(
+    server_t *server, client_t *client, int argc, char **argv)
 {
-    (void)(argv);
-
     if (client->state != STATE_LOGGED) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_LOGIN_MANDATORY));
@@ -41,6 +42,18 @@ static int retr_validation(client_t *client, int argc, char **argv)
 
         return (CODE_ERROR);
     }
+
+    char *path = string_format(
+        "%s/%s/%s", server->directory, client->directory, argv[1]);
+
+    if (file_exists(path) == false) {
+        client->messages->add(
+            client->messages, string_format(MESSAGE_ERROR_FILE_UNAVAILABLE));
+
+        return (CODE_ERROR);
+    }
+
+    free(path);
 
     return (CODE_SUCCESS);
 }
@@ -97,6 +110,9 @@ static int retr_fork(client_t *client, const char *path)
     int pid = fork();
 
     if (pid == 0) {
+        client->send(
+            client, MESSAGE_CONNECTION_OPEN, strlen(MESSAGE_CONNECTION_OPEN));
+
         if (retr_connect(client))
             return (CODE_ERROR);
 
@@ -105,6 +121,9 @@ static int retr_fork(client_t *client, const char *path)
 
         if (retr_disconnect(client))
             return (CODE_ERROR);
+
+        client->send(
+            client, MESSAGE_CONNECTION_CLOSE, strlen(MESSAGE_CONNECTION_CLOSE));
     }
 
     return (CODE_SUCCESS);
@@ -112,19 +131,16 @@ static int retr_fork(client_t *client, const char *path)
 
 int retr(server_t *server, client_t *client, int argc, char **argv)
 {
-    (void)(server);
-
-    if (retr_validation(client, argc, argv))
+    if (retr_validation(server, client, argc, argv))
         return (CODE_ERROR);
 
-    client->messages->add(
-        client->messages, string_format(MESSAGE_CONNECTION_OPEN));
+    char *path = string_format(
+        "%s/%s/%s", server->directory, client->directory, argv[1]);
 
-    if (retr_fork(client, argv[1]))
+    if (retr_fork(client, path))
         return (CODE_ERROR);
 
-    client->messages->add(
-        client->messages, string_format(MESSAGE_CONNECTION_CLOSE));
+    free(path);
 
     return (CODE_SUCCESS);
 }

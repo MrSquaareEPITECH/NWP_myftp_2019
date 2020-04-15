@@ -2,16 +2,16 @@
 ** EPITECH PROJECT, 2020
 ** server
 ** File description:
-** cdup.c
+** noop.c
 */
 
-#include "cdup.h"
+#include "noop.h"
 
 #include "def/code.h"
 #include "def/message.h"
 #include "util/string.h"
 
-static int cdup_validation(client_t *client, int argc, char **argv)
+static int noop_validation(client_t *client, int argc, char **argv)
 {
     (void)(argc);
     (void)(argv);
@@ -26,17 +26,12 @@ static int cdup_validation(client_t *client, int argc, char **argv)
     return (CODE_SUCCESS);
 }
 
-int cdup(server_t *server, client_t *client, int argc, char **argv)
+int noop(server_t *server, client_t *client, int argc, char **argv)
 {
     (void)(server);
 
-    if (cdup_validation(client, argc, argv))
+    if (noop_validation(client, argc, argv))
         return (CODE_ERROR);
-
-    char *parent = string_find_r(client->directory, '/');
-
-    if (parent != client->directory)
-        *parent = '\0';
 
     client->messages->add(client->messages, string_format(MESSAGE_SUCCESS));
 

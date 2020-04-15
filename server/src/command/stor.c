@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -97,6 +98,9 @@ static int stor_fork(client_t *client, const char *path)
     int pid = fork();
 
     if (pid == 0) {
+        client->send(
+            client, MESSAGE_CONNECTION_OPEN, strlen(MESSAGE_CONNECTION_OPEN));
+
         if (stor_connect(client))
             return (CODE_ERROR);
 
@@ -105,6 +109,9 @@ static int stor_fork(client_t *client, const char *path)
 
         if (stor_disconnect(client))
             return (CODE_ERROR);
+
+        client->send(
+            client, MESSAGE_CONNECTION_CLOSE, strlen(MESSAGE_CONNECTION_CLOSE));
     }
 
     return (CODE_SUCCESS);
@@ -112,19 +119,16 @@ static int stor_fork(client_t *client, const char *path)
 
 int stor(server_t *server, client_t *client, int argc, char **argv)
 {
-    (void)(server);
-
     if (retr_validation(client, argc, argv))
         return (CODE_ERROR);
 
-    client->messages->add(
-        client->messages, string_format(MESSAGE_CONNECTION_OPEN));
+    char *path = string_format(
+        "%s/%s/%s", server->directory, client->directory, argv[1]);
 
-    if (stor_fork(client, argv[1]))
+    if (stor_fork(client, path))
         return (CODE_ERROR);
 
-    client->messages->add(
-        client->messages, string_format(MESSAGE_CONNECTION_CLOSE));
+    free(path);
 
     return (CODE_SUCCESS);
 }

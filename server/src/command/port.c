@@ -49,7 +49,7 @@ void port_extract_information(
         string_format("%s.%s.%s.%s", args[0], args[1], args[2], args[3]);
 
     *addr = inet_addr(address);
-    *port = (atoi(args[4]) * 256) + atoi(args[5]);
+    *port = (strtol(args[4], NULL, 10) * 256) + strtol(args[5], NULL, 10);
 }
 
 char *port_message()

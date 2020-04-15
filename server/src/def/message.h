@@ -20,6 +20,7 @@ static const char* const MESSAGE_CONNECTION_OPEN =
 static const char* const MESSAGE_CONNECTION_CLOSE =
     "226 Close data connection.\n";
 static const char* const MESSAGE_LOGIN = "230 Login success.\n";
+static const char* const MESSAGE_FILE_OK = "250 File OK.\n";
 static const char* const MESSAGE_PWD = "257 \"%s\".\n";
 static const char* const MESSAGE_PASSWORD = "331 Login with PASS.\n";
 static const char* const MESSAGE_UNKNOWN_MODE = "425 Unknown mode.\n";
@@ -30,5 +31,7 @@ static const char* const MESSAGE_ERROR_LOGIN = "530 Login error.\n";
 static const char* const MESSAGE_ERROR_LOGIN_GUEST = "530 Guest.\n";
 static const char* const MESSAGE_ERROR_LOGIN_MANDATORY =
     "530 Login with USER and PASS.\n";
+static const char* const MESSAGE_ERROR_FILE_UNAVAILABLE =
+    "550 Unavailable file.\n";
 
 #endif // SERVER_SRC_DEF_MESSAGE_H

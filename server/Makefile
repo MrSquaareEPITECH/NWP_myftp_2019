@@ -31,6 +31,7 @@ PROJ_SRC			=		client.c							\
 							command/dele.c						\
 							command/help.c						\
 							command/list.c						\
+							command/noop.c						\
 							command/pass.c						\
 							command/pasv.c						\
 							command/port.c						\
@@ -41,6 +42,7 @@ PROJ_SRC			=		client.c							\
 							command/user.c						\
 							helper/command.c					\
 							util/args.c							\
+							util/file.c							\
 							util/string.c						\
 
 TEST_SRC			=
