@@ -1,5 +1,7 @@
 # Binaries
-*.out
+myftp
+myftp_client
+myftp_server
 
 # Objects
 *.o

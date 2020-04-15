@@ -5,6 +5,7 @@
 ** main.c
 */
 
-int main() {
+int main()
+{
     return (0);
 }
