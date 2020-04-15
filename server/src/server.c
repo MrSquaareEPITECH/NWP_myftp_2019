@@ -46,6 +46,7 @@ static int server_client_read_args(server_t *this, client_t *client,
     string_brk(message);
     *argv = args_create(message, " ");
     *argc = args_count(*argv);
+    return (CODE_SUCCESS);
 }
 
 static int server_client_read(server_t* this, client_t* client)
