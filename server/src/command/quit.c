@@ -24,8 +24,6 @@ int quit(server_t *server, client_t *client, int argc, char **argv)
 
     if (quit_validation(client, argc, argv))
         return (CODE_ERROR);
-
     client->state = STATE_DISCONNECTED;
-
     return (CODE_SUCCESS);
 }

@@ -16,11 +16,8 @@ static size_t args_create_size(const char *str, const char *delim)
     char *dup = strdup(str);
 
     for (const char *token = strtok(dup, delim); token;
-         ++size, token = strtok(NULL, delim))
-        ;
-
+        ++size, token = strtok(NULL, delim)) ;
     free(dup);
-
     return (size);
 }
 
@@ -36,13 +33,11 @@ char **args_create(const char *str, const char *delim)
     size_t i = 0;
 
     for (const char *token = strtok(dup, delim); i < size;
-         ++i, token = strtok(NULL, delim))
+        ++i, token = strtok(NULL, delim))
         array[i] = strdup(token);
 
     array[size] = NULL;
-
     free(dup);
-
     return array;
 }
 
@@ -50,9 +45,7 @@ int args_count(char **args)
 {
     size_t size = 0;
 
-    for (; args[size]; ++size)
-        ;
-
+    for (; args[size]; ++size) ;
     return (size);
 }
 
@@ -60,6 +53,5 @@ void args_delete(char **args)
 {
     for (size_t i = 0; args[i]; ++i)
         free(args[i]);
-
     free(args);
 }

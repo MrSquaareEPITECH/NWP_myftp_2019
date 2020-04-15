@@ -15,10 +15,8 @@ bool dir_exists(const char *path)
 
     if (stat(path, &file_s))
         return (false);
-
     if (!S_ISDIR(file_s.st_mode))
         return (false);
-
     return (true);
 }
 
@@ -28,9 +26,7 @@ bool file_exists(const char *path)
 
     if (stat(path, &file_s))
         return (false);
-
     if (!S_ISREG(file_s.st_mode))
         return (false);
-
     return (true);
 }

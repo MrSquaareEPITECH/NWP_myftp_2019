@@ -20,24 +20,18 @@ static int port_validation(client_t *client, int argc, char **argv)
     if (client->state != STATE_LOGGED) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_LOGIN_MANDATORY));
-
         return (CODE_ERROR);
     }
-
     if (argc < 2) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_ARGUMENTS));
-
         return (CODE_ERROR);
     }
-
     if (string_count(argv[1], ',') != 5) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_ARGUMENTS));
-
         return (CODE_ERROR);
     }
-
     return (CODE_SUCCESS);
 }
 
@@ -52,7 +46,7 @@ void port_extract_information(
     *port = (strtol(args[4], NULL, 10) * 256) + strtol(args[5], NULL, 10);
 }
 
-char *port_message()
+char *port_message(void)
 {
     char *message = string_format(MESSAGE_SUCCESS);
 
@@ -70,11 +64,8 @@ int port(server_t *server, client_t *client, int argc, char **argv)
     uint16_t port = 0;
 
     port_extract_information(argv[1], &addr, &port);
-
     client->con_data = socket_create_p(addr, PF_INET, port);
     client->mode = TRANSFER_ACTIVE;
-
     client->messages->add(client->messages, port_message());
-
     return (CODE_SUCCESS);
 }
