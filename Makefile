@@ -5,18 +5,31 @@
 ## Makefile
 ##
 
+NAME				=		myftp
+CLIENT_NAME			=		myftp_client
+SERVER_NAME			=		myftp_server
+
 CLIENT_DIR			=		client
 SERVER_DIR			=		server
+
+CP					=		cp
+RM					=		rm -rf
 
 MAKEFLAGS			+=		--silent
 
 all:				server
+					$(CP) $(SERVER_DIR)/$(SERVER_NAME) $(NAME)
 
 clean:				server_clean
 
 fclean:				server_fclean
+					$(RM) $(NAME)
 
 re:					fclean all
+
+tests_run:			server_tests_run
+
+tests_sh:			server_tests_sh
 
 client:
 					cd $(CLIENT_DIR) && $(MAKE) all
@@ -34,6 +47,12 @@ client_debug:
 
 client_debug_re:	client_fclean client_debug
 
+client_tests_run:
+					cd $(CLIENT_DIR) && $(MAKE) tests_run
+
+client_tests_sh:
+					cd $(CLIENT_DIR) && $(MAKE) tests_sh
+
 server:
 					cd $(SERVER_DIR) && $(MAKE) all
 
@@ -49,6 +68,12 @@ server_debug:
 					cd $(SERVER_DIR) && $(MAKE) debug
 
 server_debug_re:	server_fclean server_debug
+
+server_tests_run:
+					cd $(SERVER_DIR) && $(MAKE) tests_run
+
+server_tests_sh:
+					cd $(SERVER_DIR) && $(MAKE) tests_sh
 
 full:				client server
 
