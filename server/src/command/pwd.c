@@ -23,10 +23,8 @@ static int pwd_validation(client_t *client, int argc, char **argv)
     if (client->state != STATE_LOGGED) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_LOGIN_MANDATORY));
-
         return (CODE_ERROR);
     }
-
     return (CODE_SUCCESS);
 }
 
@@ -43,8 +41,6 @@ int pwd(server_t *server, client_t *client, int argc, char **argv)
 
     if (pwd_validation(client, argc, argv))
         return (CODE_ERROR);
-
     client->messages->add(client->messages, pwd_message(client));
-
     return (CODE_SUCCESS);
 }

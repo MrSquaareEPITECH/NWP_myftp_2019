@@ -22,10 +22,8 @@ static int pasv_validation(client_t *client, int argc, char **argv)
     if (client->state != STATE_LOGGED) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_LOGIN_MANDATORY));
-
         return (CODE_ERROR);
     }
-
     return (CODE_SUCCESS);
 }
 
@@ -63,17 +61,12 @@ int pasv(server_t *server, client_t *client, int argc, char **argv)
 
     if (pasv_validation(client, argc, argv))
         return (CODE_ERROR);
-
     client->data = socket_create(INADDR_ANY, PF_INET);
     client->mode = TRANSFER_PASSIVE;
-
     if (client->data->bind(client->data, SOCK_STREAM))
         return (CODE_ERROR);
-
     if (client->data->listen(client->data, 1))
         return (CODE_ERROR);
-
     client->messages->add(client->messages, pasv_message(client));
-
     return (CODE_SUCCESS);
 }

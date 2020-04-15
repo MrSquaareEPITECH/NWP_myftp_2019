@@ -34,7 +34,7 @@ struct client_s {
     int (*upload)(client_t *this, int src);
 };
 
-client_t *client_create();
+client_t *client_create(void);
 void client_delete(client_t *client);
 
 #endif // SERVER_SRC_CLIENT_H

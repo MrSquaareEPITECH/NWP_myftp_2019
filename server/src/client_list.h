@@ -27,7 +27,7 @@ struct client_list_s {
     size_t (*size)(client_list_t *this);
 };
 
-client_list_t *client_list_create();
+client_list_t *client_list_create(void);
 void client_list_delete(client_list_t *list);
 
 #endif // SERVER_SRC_CLIENT_LIST_H

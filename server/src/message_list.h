@@ -27,7 +27,7 @@ struct message_list_s {
     size_t (*size)(message_list_t *this);
 };
 
-message_list_t *message_list_create();
+message_list_t *message_list_create(void);
 void message_list_delete(message_list_t *list);
 
 #endif // SERVER_SRC_MESSAGE_LIST_H
