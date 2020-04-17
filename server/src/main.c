@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "component/server/server.h"
 #include "def/code.h"
-#include "server.h"
 #include "util/path.h"
 
 int error(int argc, char **argv)

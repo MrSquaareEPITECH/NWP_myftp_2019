@@ -8,8 +8,8 @@
 #ifndef SERVER_SRC_HELPER_PATH_H
 #define SERVER_SRC_HELPER_PATH_H
 
-#include "client.h"
-#include "server.h"
+#include "component/client/client.h"
+#include "component/server/server.h"
 
 char *path_find(server_t *server, client_t *client, char *dir);
 

@@ -21,30 +21,36 @@ RM					=		rm -rf
 
 MAIN_SRC			=		main.c
 
-PROJ_SRC			=		client.c							\
-							client_list.c						\
-							message_list.c						\
-							server.c							\
-							socket.c							\
-							command/cdup.c						\
-							command/cwd.c						\
-							command/dele.c						\
-							command/help.c						\
-							command/list.c						\
-							command/noop.c						\
-							command/pass.c						\
-							command/pasv.c						\
-							command/port.c						\
-							command/pwd.c						\
-							command/quit.c						\
-							command/retr.c						\
-							command/stor.c						\
-							command/user.c						\
-							helper/command.c					\
-							helper/path.c						\
-							util/args.c							\
-							util/path.c							\
-							util/string.c						\
+PROJ_SRC			=		command/cdup.c								\
+							command/cwd.c								\
+							command/dele.c								\
+							command/help.c								\
+							command/list.c								\
+							command/noop.c								\
+							command/pass.c								\
+							command/pasv.c								\
+							command/port.c								\
+							command/pwd.c								\
+							command/quit.c								\
+							command/retr.c								\
+							command/retr_fork.c							\
+							command/stor.c								\
+							command/stor_fork.c							\
+							command/user.c								\
+							component/client/client.c					\
+							component/client/client_func.c				\
+							component/client/message_list.c				\
+							component/server/server.c					\
+							component/server/server_func.c				\
+							component/server/server_client.c			\
+							component/server/client_list.c				\
+							component/socket/socket.c					\
+							component/socket/socket_func.c				\
+							helper/command.c							\
+							helper/path.c								\
+							util/args.c									\
+							util/path.c									\
+							util/string.c								\
 
 TEST_SRC			=
 

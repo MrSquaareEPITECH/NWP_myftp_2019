@@ -11,8 +11,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "component/socket/socket.h"
 #include "client_list.h"
-#include "socket.h"
 
 typedef struct server_s server_t;
 
@@ -27,8 +27,6 @@ struct server_s {
     fd_set write_fd_set;
 
     int (*accept)(server_t *this);
-    int (*client_add)(server_t *this, client_t *client);
-    int (*client_remove)(server_t *this, client_t *client);
     int (*execute)(server_t *this);
     int (*listen)(server_t *this);
     int (*select)(server_t *this);
