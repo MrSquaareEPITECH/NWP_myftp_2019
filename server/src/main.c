@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "component/server/server.h"
 #include "def/code.h"
-#include "server.h"
-#include "util/file.h"
+#include "util/path.h"
 
 int error(int argc, char **argv)
 {
@@ -41,7 +41,9 @@ int main(int argc, char **argv)
     if (error(argc, argv))
         return (CODE_ERROR);
 
-    server_t *server = server_create(argv[2], strtol(argv[1], NULL, 10));
+    long port = strtol(argv[1], NULL, 10);
+    char *directory = path_real(argv[2]);
+    server_t *server = server_create(directory, port);
     int code = 0;
 
     code = server->listen(server);

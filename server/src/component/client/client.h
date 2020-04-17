@@ -10,8 +10,8 @@
 
 #include <stdbool.h>
 
+#include "component/socket/socket.h"
 #include "message_list.h"
-#include "socket.h"
 
 enum TRANSFER_MODE { TRANSFER_UNKNOWN, TRANSFER_ACTIVE, TRANSFER_PASSIVE };
 enum STATE { STATE_UNKNOWN, STATE_CONNECTED, STATE_LOGGED, STATE_DISCONNECTED };

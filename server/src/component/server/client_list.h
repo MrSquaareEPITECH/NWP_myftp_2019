@@ -8,7 +8,7 @@
 #ifndef SERVER_SRC_CLIENT_LIST_H
 #define SERVER_SRC_CLIENT_LIST_H
 
-#include "client.h"
+#include "component/client/client.h"
 
 typedef struct client_list_s client_list_t;
 typedef struct client_chain_s client_chain_t;

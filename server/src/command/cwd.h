@@ -8,8 +8,8 @@
 #ifndef SERVER_SRC_COMMAND_CWD_H
 #define SERVER_SRC_COMMAND_CWD_H
 
-#include "client.h"
-#include "server.h"
+#include "component/client/client.h"
+#include "component/server/server.h"
 
 static const char *const HELP_CWD = "Change directory";
 
