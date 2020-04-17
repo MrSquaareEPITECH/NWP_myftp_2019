@@ -8,8 +8,8 @@
 #ifndef SERVER_SRC_TYPE_COMMAND_H
 #define SERVER_SRC_TYPE_COMMAND_H
 
-#include "client.h"
-#include "server.h"
+#include "component/client/client.h"
+#include "component/server/server.h"
 
 typedef struct command_s command_t;
 

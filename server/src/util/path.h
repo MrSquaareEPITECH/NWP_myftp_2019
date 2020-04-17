@@ -12,6 +12,6 @@
 
 bool dir_exists(const char *path);
 bool file_exists(const char *path);
-char *path(const char *format, ...);
+char *path_real(const char *relative);
 
 #endif // SERVER_SRC_UTIL_FILE_H
