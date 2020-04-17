@@ -50,15 +50,12 @@ int server_client_call_command(server_t* this, client_t* client)
 
     if (server_client_receive_command(client, &argc, &argv))
         return (CODE_ERROR);
-    if (argc < 1) {
-        client->messages->add(
-            client->messages, string_format(MESSAGE_ERROR_UNKNOWN));
-        return (CODE_ERROR);
-    }
+    if (argc < 1)
+        return (CODE_SUCCESS);
     if (command_find(argv[0]) == NULL) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_UNKNOWN));
-        return (CODE_ERROR);
+        return (CODE_SUCCESS);
     }
 
     const command_t* command = command_find(argv[0]);
