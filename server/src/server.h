@@ -20,7 +20,7 @@ struct server_s {
     client_list_t *clients;
     socket_t *control;
     socket_t *data;
-    const char *directory;
+    char *directory;
 
     fd_set active_fd_set;
     fd_set read_fd_set;
@@ -35,7 +35,7 @@ struct server_s {
     int (*run)(server_t *this);
 };
 
-server_t *server_create(const char *directory, uint16_t port);
+server_t *server_create(char *directory, uint16_t port);
 void server_delete(server_t *server);
 
 #endif // SERVER_SRC_SERVER_H

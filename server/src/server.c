@@ -32,12 +32,8 @@ static int server_client_add(server_t* this, client_t* client)
     return (CODE_SUCCESS);
 }
 
-static int server_client_read_args(server_t *this, client_t *client,
-    int *argc, char ***argv)
+static int server_client_read_args(client_t* client, int* argc, char*** argv)
 {
-    if (FD_ISSET(client->con_control->fd, &this->read_fd_set) == 0)
-        return (CODE_SUCCESS);
-
     char message[SIZE_MESSAGE];
 
     memset(message, 0, SIZE_MESSAGE);
@@ -49,25 +45,38 @@ static int server_client_read_args(server_t *this, client_t *client,
     return (CODE_SUCCESS);
 }
 
-static int server_client_read(server_t* this, client_t* client)
+static int server_client_read_errors(client_t* client, int argc, char** argv)
 {
-    int argc = 0;
-    char** argv = NULL;
-
-    if (server_client_read_args(this, client, &argc, &argv))
-        return (CODE_ERROR);
-
-    if (argc < 1)
-        return (CODE_ERROR);
-
-    const command_t* command = command_find(argv[0]);
-
-    if (command == NULL) {
+    if (argc < 1) {
         client->messages->add(
             client->messages, string_format(MESSAGE_ERROR_UNKNOWN));
         return (CODE_ERROR);
     }
-    return (command->func(this, client, argc, argv));
+    if (command_find(argv[0]) == NULL) {
+        client->messages->add(
+            client->messages, string_format(MESSAGE_ERROR_UNKNOWN));
+        return (CODE_ERROR);
+    }
+    return (CODE_SUCCESS);
+}
+
+static int server_client_read(server_t* this, client_t* client)
+{
+    if (FD_ISSET(client->con_control->fd, &this->read_fd_set) == 0)
+        return (CODE_SUCCESS);
+
+    int argc = 0;
+    char** argv = NULL;
+
+    if (server_client_read_args(client, &argc, &argv))
+        return (CODE_ERROR);
+    if (server_client_read_errors(client, argc, argv))
+        return (CODE_ERROR);
+
+    const command_t* command = command_find(argv[0]);
+    int code = command->func(this, client, argc, argv);
+
+    return (code);
 }
 
 static int server_client_write(server_t* this, client_t* client)
@@ -122,7 +131,6 @@ static int server_execute(server_t* this)
     for (client_chain_t* item = this->clients->begin; item; item = item->next) {
         if (item->client->state == STATE_DISCONNECTED) {
             this->client_remove(this, item->client);
-
             return (CODE_SUCCESS);
         }
         server_client_read(this, item->client);
@@ -171,7 +179,7 @@ static int server_run(server_t* this)
     }
 }
 
-server_t* server_create(const char* directory, uint16_t port)
+server_t* server_create(char* directory, uint16_t port)
 {
     server_t* server = malloc(sizeof(server_t));
 
@@ -197,6 +205,8 @@ void server_delete(server_t* server)
 {
     if (server == NULL)
         return;
+    if (server->directory)
+        free(server->directory);
     if (server->control)
         socket_delete(server->control);
     if (server->clients)

@@ -16,13 +16,13 @@
 
 #include "def/code.h"
 #include "def/message.h"
-#include "util/file.h"
+#include "helper/path.h"
+#include "util/path.h"
 #include "util/string.h"
 
-static int retr_validation_path(server_t *server, client_t *client, char *sub)
+static int retr_validation_path(server_t *server, client_t *client, char *file)
 {
-    char *path = string_format(
-        "%s/%s/%s", server->directory, client->directory, sub);
+    char *path = path_find(server, client, file);
 
     if (file_exists(path) == false) {
         client->messages->add(
@@ -119,8 +119,8 @@ int retr(server_t *server, client_t *client, int argc, char **argv)
     if (retr_validation(server, client, argc, argv))
         return (CODE_ERROR);
 
-    char *path = string_format(
-        "%s/%s/%s", server->directory, client->directory, argv[1]);
+    char *path = path_find(server, client, argv[1]);
+
     if (retr_fork(client, path))
         return (CODE_ERROR);
     free(path);

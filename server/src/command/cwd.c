@@ -8,16 +8,17 @@
 #include "cwd.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "def/code.h"
 #include "def/message.h"
-#include "util/file.h"
+#include "helper/path.h"
+#include "util/path.h"
 #include "util/string.h"
 
-static int cwd_validation_path(server_t *server, client_t *client, char *sub)
+static int cwd_validation_path(server_t *server, client_t *client, char *dir)
 {
-    char *path = string_format(
-        "%s/%s/%s", server->directory, client->directory, sub);
+    char *path = path_find(server, client, dir);
 
     if (dir_exists(path) == false) {
         client->messages->add(
@@ -48,12 +49,27 @@ static int cwd_validation(
     return (CODE_SUCCESS);
 }
 
+static char *cwd_directory(server_t *server, client_t *client, char *dir)
+{
+    char *relative = path_find(server, client, dir);
+    char *real = path_real(relative);
+    char *directory = NULL;
+
+    if (strstr(real, server->directory))
+        directory = strdup(&real[strlen(server->directory)]);
+    else
+        directory = strdup("/");
+    free(relative);
+    free(real);
+    return (directory);
+}
+
 int cwd(server_t *server, client_t *client, int argc, char **argv)
 {
     if (cwd_validation(server, client, argc, argv))
         return (CODE_ERROR);
 
-    char *directory = string_format("%s/%s", client->directory, argv[1]);
+    char *directory = cwd_directory(server, client, argv[1]);
 
     free(client->directory);
     client->directory = directory;

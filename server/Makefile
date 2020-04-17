@@ -41,8 +41,9 @@ PROJ_SRC			=		client.c							\
 							command/stor.c						\
 							command/user.c						\
 							helper/command.c					\
+							helper/path.c						\
 							util/args.c							\
-							util/file.c							\
+							util/path.c							\
 							util/string.c						\
 
 TEST_SRC			=
