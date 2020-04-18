@@ -31,7 +31,7 @@ static int list_connect(client_t *client)
 
 static int list_display(client_t *client, const char *path)
 {
-    dup2(client->con_control->fd, 1);
+    dup2(client->con_data->fd, 1);
     if (execl("/bin/ls", "ls", "-la", path, NULL) == -1)
         return (CODE_ERROR);
     return (CODE_SUCCESS);
