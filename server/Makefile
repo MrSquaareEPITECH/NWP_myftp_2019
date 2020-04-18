@@ -26,6 +26,7 @@ PROJ_SRC			=		command/cdup.c								\
 							command/dele.c								\
 							command/help.c								\
 							command/list.c								\
+							command/list_fork.c							\
 							command/noop.c								\
 							command/pass.c								\
 							command/pasv.c								\
