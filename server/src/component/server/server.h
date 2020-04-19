@@ -11,8 +11,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "component/socket/socket.h"
 #include "client_list.h"
+#include "component/socket/socket.h"
 
 typedef struct server_s server_t;
 

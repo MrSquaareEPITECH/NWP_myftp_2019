@@ -29,7 +29,8 @@ static int list_validation_path(server_t *server, client_t *client, char *dir)
     return (CODE_SUCCESS);
 }
 
-static int list_validation(server_t *server, client_t *client, int argc, char **argv)
+static int list_validation(
+    server_t *server, client_t *client, int argc, char **argv)
 {
     if (client->state != STATE_LOGGED) {
         client->messages->add(
@@ -59,8 +60,7 @@ int list(server_t *server, client_t *client, int argc, char **argv)
     if (argc == 2)
         path = path_find(server, client, argv[1]);
     else
-        path = string_format("%s/%s", server->directory,
-            client->directory);
+        path = string_format("%s/%s", server->directory, client->directory);
 
     if (list_fork(client, path))
         return (CODE_ERROR);
