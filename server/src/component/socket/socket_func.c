@@ -49,7 +49,7 @@ int socket_connect(socket_t *this, int type)
         return (CODE_ERROR);
     }
     if (connect(this->fd, (sockaddr_t *)(&this->addr_in),
-                sizeof(this->addr_in)) == -1) {
+            sizeof(this->addr_in)) == -1) {
         fprintf(stderr, "%s: %s\n", ERROR_SOCKET_CONNECT, strerror(errno));
         return (CODE_ERROR);
     }

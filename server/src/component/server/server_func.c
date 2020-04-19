@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "server_client.h"
 #include "component/client/client.h"
 #include "def/code.h"
 #include "def/error.h"
+#include "server_client.h"
 
 int server_accept(server_t* this)
 {
